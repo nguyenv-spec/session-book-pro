@@ -19,17 +19,18 @@ Front-end only. No backend, APIs, or persistence in this plan — UI, UX, access
 
 | Phase | Name | Status |
 |-------|------|--------|
-| 0 | Foundations & conventions | Not started |
+| 0 | Foundations & conventions | Partial (0.3, 0.5) |
 | 1 | Mobile navigation & layout fixes | Not started |
 | 2 | Booking flow UI (mock) | Not started |
 | 3 | Schedule UX (mobile, filters, week UI) | Not started |
-| 4 | Visual encoding & availability | Not started |
+| 4 | Visual encoding & availability | Done |
 | 5 | Trust, content & conversion sections | Not started |
 | 6 | Accessibility & semantics | Not started |
-| 7 | Motion, theme & brand polish | Not started |
+| 7 | Motion, theme & brand polish | Done (7.12–7.13 optional, skipped) |
 | 8 | SEO, meta & optional enhancements | Not started |
 
-**Phase completion notes:** _(add dates and notes here as phases finish)_
+**Phase completion notes:**
+- 2026-06-08 — Phase 4 (visual encoding) + Phase 7 (motion, theme, brand polish) shipped. Focus tokens, capacity bars, hero next-session card, dark mode toggle, scroll reveal, paper grain, brand image treatment.
 
 ---
 
@@ -41,9 +42,9 @@ Establish shared patterns before feature work so later phases stay consistent.
 
 - [ ] **0.1** Audit existing shadcn/ui components already in repo (`Sheet`, `Dialog`, `Button`, `Badge`, `Tabs`, `Accordion`, etc.) and note which will be used per phase
 - [ ] **0.2** Define shared types for `Session`, `Focus`, `Location` in a dedicated file (e.g. `src/types/session.ts`) — move out of `index.tsx` when implementing
-- [ ] **0.3** Define shared focus/location color tokens in `styles.css` (CSS variables for Strength / Conditioning / Mobility)
+- [x] **0.3** Define shared focus/location color tokens in `styles.css` (CSS variables for Strength / Conditioning / Mobility)
 - [ ] **0.4** Standardize CTA copy constants: primary **Book session**, secondary **View schedule**, tertiary **Join waitlist**
-- [ ] **0.5** Add `scroll-margin-top` utility or section class for sticky header offset (target ~`4rem` / `h-16`)
+- [x] **0.5** Add `scroll-margin-top` utility or section class for sticky header offset (target ~`4rem` / `h-16`)
 - [ ] **0.6** Document breakpoint strategy: table layout `md+`, card layout `<md`
 
 ### Acceptance
@@ -193,28 +194,28 @@ Establish shared patterns before feature work so later phases stay consistent.
 
 #### Focus color system
 
-- [ ] **4.1** Assign distinct colors/icons per focus in CSS variables (Phase 0.3)
-- [ ] **4.2** Update `LegendDot` to use focus-specific colors
-- [ ] **4.3** Row left border or focus chip uses focus color (table + cards)
-- [ ] **4.4** Icons (`Dumbbell`, `Wind`, `Activity`) retain consistent stroke; color carries meaning
+- [x] **4.1** Assign distinct colors/icons per focus in CSS variables (Phase 0.3)
+- [x] **4.2** Update `LegendDot` to use focus-specific colors
+- [x] **4.3** Row left border or focus chip uses focus color (table + cards)
+- [x] **4.4** Icons (`Dumbbell`, `Wind`, `Activity`) retain consistent stroke; color carries meaning
 
 #### Availability UI
 
-- [ ] **4.5** Capacity indicator: progress bar or dot row (`████░░` style) showing `spots / capacity`
-- [ ] **4.6** Emphasize low availability (`spots <= 2`) with orange label: **2 left**
-- [ ] **4.7** Full sessions: muted **Full · waitlist** + waitlist CTA styling distinct from Book
-- [ ] **4.8** Pulsing dot on hero / cards only when low or full (intentional, not noisy)
+- [x] **4.5** Capacity indicator: progress bar or dot row (`████░░` style) showing `spots / capacity`
+- [x] **4.6** Emphasize low availability (`spots <= 2`) with orange label: **2 left**
+- [x] **4.7** Full sessions: muted **Full · waitlist** + waitlist CTA styling distinct from Book
+- [x] **4.8** Pulsing dot on hero / cards only when low or full (intentional, not noisy)
 
 #### Hero “Next session” card
 
-- [ ] **4.9** Derive next upcoming session from `sessions` data (or helper)
-- [ ] **4.10** Sync location name (e.g. Barceloneta) with session data
-- [ ] **4.11** Show correct availability state (open / low / full) on hero card
-- [ ] **4.12** Show hero card on mobile (`sm:block` currently hides some value — reconsider `block` with smaller layout)
+- [x] **4.9** Derive next upcoming session from `sessions` data (or helper)
+- [x] **4.10** Sync location name (e.g. Barceloneta) with session data
+- [x] **4.11** Show correct availability state (open / low / full) on hero card
+- [x] **4.12** Show hero card on mobile (`sm:block` currently hides some value — reconsider `block` with smaller layout)
 
 #### Outdoor vs Studio badges
 
-- [ ] **4.13** Strengthen visual difference (icon, border style, or subtle map pin for Outdoor)
+- [x] **4.13** Strengthen visual difference (icon, border style, or subtle map pin for Outdoor)
 
 ### Acceptance
 
@@ -274,7 +275,7 @@ Establish shared patterns before feature work so later phases stay consistent.
 
 #### Section numbering
 
-- [ ] **5.22** Fix numbering: either add **01 — Start** to hero or renumber Schedule as **01**
+- [x] **5.22** Fix numbering: either add **01 — Start** to hero or renumber Schedule as **01**
 - [ ] **5.23** Ensure monotonic order through footer (01 … 06 or 07 if FAQ added)
 
 #### CTA hierarchy pass
@@ -318,22 +319,22 @@ Establish shared patterns before feature work so later phases stay consistent.
 
 #### Motion
 
-- [ ] **7.1** Section fade/slide on scroll (subtle; use `tw-animate-css` or CSS)
-- [ ] **7.2** Hero image: light load animation (fade or scale)
-- [ ] **7.3** Sticky nav: add shadow/backdrop after scroll threshold
-- [ ] **7.4** Respect `prefers-reduced-motion: reduce` — disable or minimize all above
+- [x] **7.1** Section fade/slide on scroll (subtle; use `tw-animate-css` or CSS)
+- [x] **7.2** Hero image: light load animation (fade or scale)
+- [x] **7.3** Sticky nav: add shadow/backdrop after scroll threshold
+- [x] **7.4** Respect `prefers-reduced-motion: reduce` — disable or minimize all above
 
 #### Dark mode
 
-- [ ] **7.5** Decide: ship theme toggle OR remove unused `.dark` tokens
-- [ ] **7.6** If shipping: toggle in footer; persist preference in `localStorage`
-- [ ] **7.7** Verify cards, borders, orange accent in dark theme
+- [x] **7.5** Decide: ship theme toggle OR remove unused `.dark` tokens
+- [x] **7.6** If shipping: toggle in footer; persist preference in `localStorage`
+- [x] **7.7** Verify cards, borders, orange accent in dark theme
 
 #### Brand polish
 
-- [ ] **7.8** Optional paper grain / noise on `background` (CSS pseudo-element)
-- [ ] **7.9** Unified image treatment: border radius, optional warm overlay grade
-- [ ] **7.10** One signature brand moment (e.g. oversized watermark in final CTA, recurring orange rule)
+- [x] **7.8** Optional paper grain / noise on `background` (CSS pseudo-element)
+- [x] **7.9** Unified image treatment: border radius, optional warm overlay grade
+- [x] **7.10** One signature brand moment (e.g. oversized watermark in final CTA, recurring orange rule)
 - [ ] **7.11** Evaluate display font for headings only (keep Inter for body) — font swap is optional
 
 #### Sticky mobile CTA (optional)
@@ -460,7 +461,7 @@ Record choices here so the team doesn’t re-debate them.
 |------|----------|-----------|
 | _TBD_ | Sheet vs Dialog for booking | _e.g. Sheet on all breakpoints for consistency_ |
 | _TBD_ | Keep or remove Sonner on booking success | _e.g. inline only_ |
-| _TBD_ | Dark mode: ship or remove tokens | |
+| 2026-06-08 | Dark mode: ship toggle in footer | Persisted in `localStorage`; `.dark` tokens kept |
 | _TBD_ | Pricing copy source | _placeholder until client provides_ |
 | _TBD_ | Week prev/next behavior | _disabled vs static cycle_ |
 
