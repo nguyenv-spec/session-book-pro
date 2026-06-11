@@ -5,10 +5,8 @@ on:
 
 jobs:
   generate-release-note:
-    name: Generate Sprint Release Note
     runs-on: ubuntu-latest
     permissions:
-      contents: read
       issues: read
 
     steps:
@@ -25,73 +23,77 @@ jobs:
               owner: context.repo.owner,
               repo: context.repo.repo,
               state: 'all',
-              per_page: 100,
             });
 
-            const sprintIssues = issues.filter(issue => issue.milestone?.title === 'sprint').map(issue => ({
-              number: issue.number,
-              title: issue.title,
-              body: issue.body || '',
-              state: issue.state,
-              url: issue.html_url,
-              labels: issue.labels.map(label => label.name),
-            }));
+            const sprintIssues = issues
+              .filter(issue => issue.milestone?.title === 'sprint')
+              .map(issue => ({
+                number: issue.number,
+                title: issue.title,
+                body: issue.body || '',
+                state: issue.state,
+                url: issue.html_url,
+                labels: issue.labels.map(label => label.name || ''),
+              }));
 
             return JSON.stringify(sprintIssues);
 
       - name: Save sprint issues data
         run: |
           mkdir -p .github/release-notes
-          cat <<'PY' > .github/release-notes/write-issues.py
-import json, os
-issues = json.loads(os.environ['SPRINT_ISSUES'])
-with open('.github/release-notes/sprint-issues.json', 'w', encoding='utf-8') as f:
-    json.dump(issues, f, indent=2)
-PY
-          python3 .github/release-notes/write-issues.py
+          python3 - <<'PY'
+          import json, os
+          issues = json.loads(os.environ['SPRINT_ISSUES'])
+          with open('.github/release-notes/sprint-issues.json', 'w', encoding='utf-8') as f:
+              json.dump(issues, f, indent=2)
+          PY
         env:
           SPRINT_ISSUES: ${{ steps.fetch_sprint_issues.outputs.result }}
 
       - name: Draft release note
         run: |
-          python3 <<'PY'
-import json
-from pathlib import Path
-issues_path = Path('.github/release-notes/sprint-issues.json')
-release_path = Path('.github/release-notes/sprint-release-note.md')
-if not issues_path.exists():
-    raise SystemExit('Sprint issues file not found')
-issues = json.loads(issues_path.read_text(encoding='utf-8'))
-lines = [
-    '# Sprint Release Notes',
-    '',
-]
-if issues:
-    lines.extend([
-        '## What changed',
-        '',
-    ])
-    for issue in issues:
-        lines.append(f"- **{issue['title']}** ({issue['url']})")
-    lines.extend([
-        '',
-        '## Benefit',
-        '',
-        'This release note summarizes the sprint milestone issues and highlights how the current work improves clarity, planning, and execution.',
-        '',
-        '## Impact',
-        '',
-        'The sprint issues define the current development focus. Their completion helps reduce project risk, improves team alignment, and advances the current product sprint.',
-    ])
-else:
-    lines.extend([
-        'No sprint milestone issues were found for this release note.',
-        '',
-        'If issues exist on the project board under milestone `sprint`, confirm the repository and milestone naming and rerun the workflow.',
-    ])
-release_path.write_text('\n'.join(lines), encoding='utf-8')
-print(f'Wrote release note to {release_path}')
-PY
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+
+          issues_path = Path('.github/release-notes/sprint-issues.json')
+          release_path = Path('.github/release-notes/sprint-release-note.md')
+          if not issues_path.exists():
+              raise SystemExit('Sprint issues file not found')
+
+          issues = json.loads(issues_path.read_text(encoding='utf-8'))
+          lines = [
+              '# Sprint Release Notes',
+              '',
+          ]
+
+          if issues:
+              lines.extend([
+                  '## What changed',
+                  '',
+              ])
+              for issue in issues:
+                  lines.append(f"- **{issue['title']}** ({issue['url']})")
+              lines.extend([
+                  '',
+                  '## Benefit',
+                  '',
+                  'This release note summarizes the sprint milestone issues and highlights how the current work improves clarity, planning, and execution.',
+                  '',
+                  '## Impact',
+                  '',
+                  'The sprint issues define the current development focus. Their completion helps reduce project risk, improves team alignment, and advances the current product sprint.',
+              ])
+          else:
+              lines.extend([
+                  'No sprint milestone issues were found for this release note.',
+                  '',
+                  'If issues exist on the project board under milestone `sprint`, confirm the repository and milestone naming and rerun the workflow.',
+              ])
+
+          release_path.write_text('\n'.join(lines), encoding='utf-8')
+          print(f'Wrote release note to {release_path}')
+          PY
 
       - name: Upload release note artifact
         uses: actions/upload-artifact@v4
