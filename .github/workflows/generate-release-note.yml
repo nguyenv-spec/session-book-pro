@@ -44,6 +44,8 @@ jobs:
           python3 - <<'PY'
           import json, os
           issues = json.loads(os.environ['SPRINT_ISSUES'])
+          if isinstance(issues, str):
+              issues = json.loads(issues)
           with open('.github/release-notes/sprint-issues.json', 'w', encoding='utf-8') as f:
               json.dump(issues, f, indent=2)
           PY
@@ -62,6 +64,8 @@ jobs:
               raise SystemExit('Sprint issues file not found')
 
           issues = json.loads(issues_path.read_text(encoding='utf-8'))
+          if isinstance(issues, str):
+              issues = json.loads(issues)
           lines = [
               '# Sprint Release Notes',
               '',
